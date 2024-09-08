@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tpwd\KeSearch\Domain\Repository;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection as DoctrineDbalConnection;
+use Doctrine\DBAL\ParameterType;
 use PDO;
 
 /***************************************************************
@@ -56,19 +58,20 @@ class FileReferenceRepository extends BaseRepository
                 ),
                 $queryBuilder->expr()->eq(
                     'uid_foreign',
-                    $queryBuilder->createNamedParameter($uid_foreign, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid_foreign, ParameterType::INTEGER)
                 ),
+
                 $queryBuilder->expr()->in(
                     'sys_language_uid',
-                    $queryBuilder->createNamedParameter($languageIds, DoctrineDbalConnection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($languageIds, ArrayParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_state',
-                    $queryBuilder->createNamedParameter(0, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_wsid',
-                    $queryBuilder->createNamedParameter(0, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)
                 )
             )
             ->orderBy('sorting_foreign', 'asc')

@@ -2,6 +2,7 @@
 
 namespace Tpwd\KeSearch\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -84,7 +85,7 @@ class GenericRepository
                 ->where(
                     $queryBuilder->expr()->eq(
                         'uid',
-                        $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                     )
                 )
                 ->executeQuery()
@@ -113,11 +114,11 @@ class GenericRepository
                 ->where(
                     $queryBuilder->expr()->eq(
                         $transOrigPointerField,
-                        $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                     ),
                     $queryBuilder->expr()->eq(
                         $languageField,
-                        $queryBuilder->createNamedParameter($languageId, PDO::PARAM_INT)
+                        $queryBuilder->createNamedParameter($languageId, ParameterType::INTEGER)
                     )
                 )
                 ->executeQuery()
@@ -154,7 +155,7 @@ class GenericRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     $fieldName,
-                    $queryBuilder->createNamedParameter($value, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($value, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()

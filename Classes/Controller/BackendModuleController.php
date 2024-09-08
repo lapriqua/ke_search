@@ -469,7 +469,7 @@ class BackendModuleController
             ->where(
                 $queryBuilder->expr()->like(
                     'details',
-                    $queryBuilder->quote('[ke_search]%', \PDO::PARAM_STR)
+                    $queryBuilder->quote('[ke_search]%')
                 )
             )
             ->orderBy('tstamp', 'DESC')
@@ -690,11 +690,11 @@ class BackendModuleController
             ->where(
                 $queryBuilder->expr()->gt(
                     'tstamp',
-                    $queryBuilder->quote($timestampStart, \PDO::PARAM_INT)
+                    $queryBuilder->quote($timestampStart)
                 ),
                 $queryBuilder->expr()->eq(
                     $isSysFolder ? 'pid' : 'pageid',
-                    $queryBuilder->quote($pageUid, \PDO::PARAM_INT)
+                    $queryBuilder->quote($pageUid)
                 )
             )
             ->groupBy('language')
@@ -751,8 +751,8 @@ class BackendModuleController
             ->from($table)
             ->add(
                 'where',
-                'tstamp > ' . $queryBuilder->quote($timestampStart, \PDO::PARAM_INT) .
-                ' AND language=' . $queryBuilder->quote($language, \PDO::PARAM_INT) . ' ' .
+                'tstamp > ' . $queryBuilder->quote($timestampStart) .
+                ' AND language=' . $queryBuilder->quote($language) . ' ' .
                 $pidWhere
             )
             ->add('groupBy', $tableCol . ' HAVING count(' . $tableCol . ')>0')
@@ -777,7 +777,7 @@ class BackendModuleController
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->quote($this->pageId, \PDO::PARAM_INT)
+                    $queryBuilder->quote($this->pageId)
                 )
             )
             ->setMaxResults(1)

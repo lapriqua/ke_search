@@ -78,7 +78,7 @@ class MakeTagsAlphanumericUpgradeWizard implements UpgradeWizardInterface
                 $query = $connectionPool->getQueryBuilderForTable('tx_kesearch_filteroptions');
                 $query
                     ->update('tx_kesearch_filteroptions')
-                    ->where($query->expr()->eq('uid', $query->createNamedParameter($filterOptionRow['uid'], \PDO::PARAM_INT)))
+                    ->where($query->expr()->eq('uid', $query->createNamedParameter($filterOptionRow['uid'])))
                     ->set('tag', preg_replace('/[^A-Za-z0-9]/', '', $filterOptionRow['tag']))
                     ->executeStatement();
             }

@@ -20,6 +20,7 @@ services:
     factory: ['@TYPO3\CMS\Core\Database\ConnectionPool', 'getConnectionForTable']
     arguments: ['tx_kesearch_index']
 
+
   Tpwd\KeSearch\Command\StartIndexerCommand:
     tags:
       - name: 'console.command'
@@ -61,3 +62,9 @@ services:
     public: true
     arguments:
       $eventDispatcher: '@Psr\EventDispatcher\EventDispatcherInterface'
+
+  Tpwd\KeSearch\Plugins\SearchboxPlugin:
+    public: true
+
+  Tpwd\KeSearch\Plugins\ResultsPlugin:
+    public: true

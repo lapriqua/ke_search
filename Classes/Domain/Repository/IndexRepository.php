@@ -3,6 +3,7 @@
 namespace Tpwd\KeSearch\Domain\Repository;
 
 use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\ParameterType;
 use PDO;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -56,7 +57,7 @@ class IndexRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()
@@ -76,11 +77,11 @@ class IndexRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'hash',
-                    $queryBuilder->quote($hash, \PDO::PARAM_STR)
+                    $queryBuilder->quote($hash)
                 ),
                 $queryBuilder->expr()->eq(
                     'sortdate',
-                    $queryBuilder->quote($mtime, \PDO::PARAM_INT)
+                    $queryBuilder->quote($mtime)
                 )
             )
             ->setMaxResults(1)
@@ -101,7 +102,7 @@ class IndexRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                 )
             );
         foreach ($updateFields as $key => $value) {
@@ -159,7 +160,7 @@ class IndexRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                 )
             )
             ->executeStatement();
@@ -181,10 +182,10 @@ class IndexRepository
         return $queryBuilder
             ->delete($this->tableName)
             ->where(
-                $queryBuilder->expr()->eq('orig_uid', $queryBuilder->createNamedParameter($origUid, PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, PDO::PARAM_INT)),
+                $queryBuilder->expr()->eq('orig_uid', $queryBuilder->createNamedParameter($origUid, ParameterType::INTEGER)),
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, ParameterType::INTEGER)),
                 $queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter($type)),
-                $queryBuilder->expr()->eq('language', $queryBuilder->createNamedParameter($language, PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('language', $queryBuilder->createNamedParameter($language, ParameterType::INTEGER))
             )
             ->executeStatement();
     }
@@ -243,11 +244,11 @@ class IndexRepository
                 ),
                 $queryBuilder->expr()->eq(
                     'pid',
-                    $queryBuilder->createNamedParameter($pid, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($pid, ParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->lt(
                     'tstamp',
-                    $queryBuilder->createNamedParameter($timestamp, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($timestamp, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()

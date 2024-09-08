@@ -2,6 +2,7 @@
 
 namespace Tpwd\KeSearch\Indexer\Types;
 
+use Doctrine\DBAL\ParameterType;
 use Tpwd\KeSearch\Domain\Repository\IndexRepository;
 use Tpwd\KeSearch\Domain\Repository\TtContentRepository;
 use Tpwd\KeSearch\Lib\Db;
@@ -64,7 +65,7 @@ class TtContent extends Page
             'pid',
             $queryBuilder->createNamedParameter(
                 $uid,
-                \PDO::PARAM_INT
+                ParameterType::INTEGER
             )
         );
         $where[] = $this->whereClauseForCType;
@@ -80,7 +81,7 @@ class TtContent extends Page
                 'colPos',
                 $queryBuilder->createNamedParameter(
                     -2,
-                    \PDO::PARAM_INT
+                    ParameterType::INTEGER
                 )
             );
         }

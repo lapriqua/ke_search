@@ -206,11 +206,15 @@ class Filters
         $where .= ' AND find_in_set(uid, "' . $filterUids . '")';
 
         $queryBuilder = Db::getQueryBuilder('tx_kesearch_filters');
+
+
+
         $filterQuery = $queryBuilder
             ->select('*')
+            ->addSelectLiteral('find_in_set(uid, "' . $filterUids . '") AS orderby')
             ->from($table)
-            ->add('where', $where)
-            ->add('orderBy', 'find_in_set(uid, "' . $filterUids . '")')
+            ->andWhere($where)
+            ->addOrderBy( 'orderby')
             ->executeQuery();
 
         $filterRows = [];
@@ -241,9 +245,10 @@ class Filters
         $queryBuilder = Db::getQueryBuilder('tx_kesearch_filteroptions');
         $optionsQuery = $queryBuilder
             ->select('*')
+            ->addSelectLiteral('FIND_IN_SET(uid, "' . $optionUids . '") as orderBy')
             ->from($table)
-            ->add('where', $where)
-            ->add('orderBy', 'FIND_IN_SET(uid, "' . $optionUids . '")')
+            ->andWhere($where)
+            ->addOrderBy('orderBy')
             ->executeQuery();
 
         $optionsRows = [];

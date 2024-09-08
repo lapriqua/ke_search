@@ -28,6 +28,8 @@ namespace Tpwd\KeSearch\Indexer\Types;
  * @author Andreas Kiefer
  * @author Christian Bülter
  */
+
+use Doctrine\DBAL\ParameterType;
 use Tpwd\KeSearch\Domain\Repository\ContentRepository;
 use Tpwd\KeSearch\Domain\Repository\PageRepository;
 use Tpwd\KeSearch\Indexer\IndexerBase;
@@ -401,11 +403,11 @@ class Page extends IndexerBase
                     ->where(
                         $queryBuilder->expr()->eq(
                             'l10n_parent',
-                            $queryBuilder->quote($pageRow['uid'], \PDO::PARAM_INT)
+                            $queryBuilder->quote($pageRow['uid'])
                         ),
                         $queryBuilder->expr()->eq(
                             'sys_language_uid',
-                            $queryBuilder->quote($sysLang['uid'], \PDO::PARAM_INT)
+                            $queryBuilder->quote($sysLang['uid'])
                         )
                     )
                     ->executeQuery()
@@ -562,7 +564,7 @@ class Page extends IndexerBase
                 $where = [];
                 $where[] = $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, \ParameterType::INTEGER)
                 );
                 $where[] = $this->whereClauseForCType;
 
@@ -624,7 +626,7 @@ class Page extends IndexerBase
             'pid',
             $queryBuilder->createNamedParameter(
                 $uid,
-                \PDO::PARAM_INT
+                ParameterType::INTEGER
             )
         );
         $where[] = $this->whereClauseForCType;

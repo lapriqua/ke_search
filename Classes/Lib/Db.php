@@ -116,14 +116,14 @@ class Db implements SingletonInterface
         $queryBuilder = self::getQueryBuilder('tx_kesearch_index');
         $queryBuilder->getRestrictions()->removeAll();
         $resultQuery = $queryBuilder
-            ->add('select', $queryParts['SELECT'])
+            ->addSelectLiteral($queryParts['SELECT'])
             ->from($queryParts['FROM'])
-            ->add('where', $queryParts['WHERE']);
+            ->andWhere($queryParts['WHERE']);
         if (!empty($queryParts['GROUPBY'])) {
-            $resultQuery->add('groupBy', $queryParts['GROUPBY']);
+            $resultQuery->groupBy($queryParts['GROUPBY']);
         }
         if (!empty($queryParts['ORDERBY'])) {
-            $resultQuery->add('orderBy', $queryParts['ORDERBY']);
+            $resultQuery->orderBy(...explode(' ', $queryParts['ORDERBY']));
         }
 
         $limit = $this->getLimit();
@@ -152,7 +152,7 @@ class Db implements SingletonInterface
             $queryBuilder = self::getQueryBuilder('tx_kesearch_index');
             $queryBuilder->getRestrictions()->removeAll();
             $numRows = $queryBuilder
-                ->add('select', 'FOUND_ROWS()')
+                ->addSelectLiteral('FOUND_ROWS()')
                 ->executeQuery()
                 ->fetchNumeric()[0];
             $this->numberOfResults = $numRows;
@@ -278,7 +278,7 @@ class Db implements SingletonInterface
     public function getQueryParts()
     {
         $databaseConnection = self::getDatabaseConnection($this->table);
-        $searchwordQuoted = $databaseConnection->quote($this->pObj->scoreAgainst, \PDO::PARAM_STR);
+        $searchwordQuoted = $databaseConnection->quote($this->pObj->scoreAgainst);
         $limit = $this->getLimit();
         $queryParts = [
             'SELECT' => $this->getFields($searchwordQuoted),
@@ -377,7 +377,7 @@ class Db implements SingletonInterface
         $tagRows = $queryBuilder
             ->select('tags')
             ->from($queryParts['FROM'])
-            ->add('where', $queryParts['WHERE'])
+            ->andWhere($queryParts['WHERE'])
             ->executeQuery()
             ->fetchAllAssociative();
 
@@ -403,7 +403,7 @@ class Db implements SingletonInterface
         if (count($tags) && is_array($tags)) {
             foreach ($tags as $value) {
                 // @TODO: check if this works as intended / search for better way
-                $value = $databaseConnection->quote($value, \PDO::PARAM_STR);
+                $value = $databaseConnection->quote($value);
                 $value = rtrim($value, "'");
                 $value = ltrim($value, "'");
                 $where .= ' AND MATCH (tags) AGAINST (\'' . $value . '\' IN BOOLEAN MODE) ';
@@ -456,8 +456,7 @@ class Db implements SingletonInterface
 
         $databaseConnection = self::getDatabaseConnection('tx_kesearch_index');
         $wordsAgainstQuoted = $databaseConnection->quote(
-            $this->pObj->wordsAgainst,
-            \PDO::PARAM_STR
+            $this->pObj->wordsAgainst
         );
 
         // add boolean where clause for searchwords

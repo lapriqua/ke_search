@@ -575,7 +575,7 @@ class IndexerRunner
             $queryBuilder = Db::getQueryBuilder('tx_kesearch_index');
             $where = $queryBuilder->expr()->lt(
                 'tstamp',
-                $queryBuilder->quote($this->indexerStatusService->getIndexerStartTime(), PDO::PARAM_INT)
+                $queryBuilder->quote($this->indexerStatusService->getIndexerStartTime())
             );
 
             // hook for cleanup
@@ -829,9 +829,9 @@ class IndexerRunner
             return true;
         }   // insert new record
         $this->insertRecordIntoIndex($fieldValues, $debugOnly);
-        if (!$debugOnly) {
-            return (int)Db::getDatabaseConnection('tx_kesearch_index')->lastInsertId($table);
-        }
+//        if (!$debugOnly) {
+//            return (int)Db::getDatabaseConnection('tx_kesearch_index')->lastInsertId();
+//        }
 
         return 0;
     }
@@ -852,20 +852,20 @@ class IndexerRunner
 
         $queryArray = [];
         $queryArray['set'] = 'SET
-			@pid = ' . $queryBuilder->quote($fieldValues['pid'], PDO::PARAM_INT) . ',
-			@title = ' . $queryBuilder->quote($fieldValues['title'], PDO::PARAM_STR) . ',
-			@type = ' . $queryBuilder->quote($fieldValues['type'], PDO::PARAM_STR) . ',
+			@pid = ' . $queryBuilder->quote($fieldValues['pid']) . ',
+			@title = ' . $queryBuilder->quote($fieldValues['title']) . ',
+			@type = ' . $queryBuilder->quote($fieldValues['type']) . ',
 			@targetpid = ' . $queryBuilder->quote($fieldValues['targetpid']) . ',
-			@content = ' . $queryBuilder->quote($fieldValues['content'], PDO::PARAM_STR) . ',
-			@tags = ' . $queryBuilder->quote($fieldValues['tags'], PDO::PARAM_STR) . ',
-			@params = ' . $queryBuilder->quote($fieldValues['params'], PDO::PARAM_STR) . ',
-			@abstract = ' . $queryBuilder->quote($fieldValues['abstract'], PDO::PARAM_STR) . ',
-			@language = ' . $queryBuilder->quote($fieldValues['language'], PDO::PARAM_INT) . ',
-			@starttime = ' . $queryBuilder->quote($fieldValues['starttime'], PDO::PARAM_INT) . ',
-			@endtime = ' . $queryBuilder->quote($fieldValues['endtime'], PDO::PARAM_INT) . ',
-			@fe_group = ' . $queryBuilder->quote($fieldValues['fe_group'], PDO::PARAM_INT) . ',
-			@tstamp = ' . $queryBuilder->quote($fieldValues['tstamp'], PDO::PARAM_INT) . ',
-			@crdate = ' . $queryBuilder->quote($fieldValues['crdate'], PDO::PARAM_INT)
+			@content = ' . $queryBuilder->quote($fieldValues['content']) . ',
+			@tags = ' . $queryBuilder->quote($fieldValues['tags']) . ',
+			@params = ' . $queryBuilder->quote($fieldValues['params']) . ',
+			@abstract = ' . $queryBuilder->quote($fieldValues['abstract']) . ',
+			@language = ' . $queryBuilder->quote($fieldValues['language']) . ',
+			@starttime = ' . $queryBuilder->quote($fieldValues['starttime']) . ',
+			@endtime = ' . $queryBuilder->quote($fieldValues['endtime']) . ',
+			@fe_group = ' . $queryBuilder->quote($fieldValues['fe_group']) . ',
+			@tstamp = ' . $queryBuilder->quote($fieldValues['tstamp']) . ',
+			@crdate = ' . $queryBuilder->quote($fieldValues['crdate'])
             . $addQueryPartFor['set'] . '
 		;';
 
@@ -913,19 +913,19 @@ class IndexerRunner
 
         $queryArray = [];
         $queryArray['set'] = 'SET
-			@pid = ' . $queryBuilder->quote($fieldValues['pid'], PDO::PARAM_INT) . ',
-			@title = ' . $queryBuilder->quote($fieldValues['title'], PDO::PARAM_STR) . ',
-			@type = ' . $queryBuilder->quote($fieldValues['type'], PDO::PARAM_STR) . ',
+			@pid = ' . $queryBuilder->quote($fieldValues['pid']) . ',
+			@title = ' . $queryBuilder->quote($fieldValues['title']) . ',
+			@type = ' . $queryBuilder->quote($fieldValues['type']) . ',
 			@targetpid = ' . $queryBuilder->quote($fieldValues['targetpid']) . ',
-			@content = ' . $queryBuilder->quote($fieldValues['content'], PDO::PARAM_STR) . ',
-			@tags = ' . $queryBuilder->quote($fieldValues['tags'], PDO::PARAM_STR) . ',
-			@params = ' . $queryBuilder->quote($fieldValues['params'], PDO::PARAM_STR) . ',
-			@abstract = ' . $queryBuilder->quote($fieldValues['abstract'], PDO::PARAM_STR) . ',
-			@language = ' . $queryBuilder->quote($fieldValues['language'], PDO::PARAM_INT) . ',
-			@starttime = ' . $queryBuilder->quote($fieldValues['starttime'], PDO::PARAM_INT) . ',
-			@endtime = ' . $queryBuilder->quote($fieldValues['endtime'], PDO::PARAM_INT) . ',
-			@fe_group = ' . $queryBuilder->quote($fieldValues['fe_group'], PDO::PARAM_INT) . ',
-			@tstamp = ' . $queryBuilder->quote($fieldValues['tstamp'], PDO::PARAM_INT) .
+			@content = ' . $queryBuilder->quote($fieldValues['content']) . ',
+			@tags = ' . $queryBuilder->quote($fieldValues['tags']) . ',
+			@params = ' . $queryBuilder->quote($fieldValues['params']) . ',
+			@abstract = ' . $queryBuilder->quote($fieldValues['abstract']) . ',
+			@language = ' . $queryBuilder->quote($fieldValues['language']) . ',
+			@starttime = ' . $queryBuilder->quote($fieldValues['starttime']) . ',
+			@endtime = ' . $queryBuilder->quote($fieldValues['endtime']) . ',
+			@fe_group = ' . $queryBuilder->quote($fieldValues['fe_group']) . ',
+			@tstamp = ' . $queryBuilder->quote($fieldValues['tstamp']) .
             $addQueryPartFor['set'] . ',
 			@uid = ' . $this->currentRow['uid'] . '
 		';
@@ -972,7 +972,7 @@ class IndexerRunner
         $queryBuilder = Db::getQueryBuilder('tx_kesearch_index');
 
         foreach ($this->additionalFields as $value) {
-            $queryForSet .= ', @' . $value . ' = ' . $queryBuilder->quote($fieldValues[$value], PDO::PARAM_STR);
+            $queryForSet .= ', @' . $value . ' = ' . $queryBuilder->quote($fieldValues[$value]);
             $queryForExecute .= ', @' . $value;
         }
         return ['set' => $queryForSet, 'execute' => $queryForExecute];
@@ -996,10 +996,10 @@ class IndexerRunner
             ->select('*')
             ->from('tx_kesearch_index')
             ->where(
-                $queryBuilder->expr()->eq('orig_uid', $queryBuilder->quote($uid, PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('pid', $queryBuilder->quote($pid, PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('type', $queryBuilder->quote($type, PDO::PARAM_STR)),
-                $queryBuilder->expr()->eq('language', $queryBuilder->quote($language, PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('orig_uid', $queryBuilder->quote($uid)),
+                $queryBuilder->expr()->eq('pid', $queryBuilder->quote($pid)),
+                $queryBuilder->expr()->eq('type', $queryBuilder->quote($type)),
+                $queryBuilder->expr()->eq('language', $queryBuilder->quote($language))
             )
             ->setMaxResults(1)
             ->executeQuery()
@@ -1037,19 +1037,19 @@ class IndexerRunner
             ->where(
                 $queryBuilder->expr()->eq(
                     'type',
-                    $queryBuilder->quote($type, PDO::PARAM_STR)
+                    $queryBuilder->quote($type)
                 ),
                 $queryBuilder->expr()->eq(
                     'hash',
-                    $queryBuilder->quote($hash, PDO::PARAM_STR)
+                    $queryBuilder->quote($hash)
                 ),
                 $queryBuilder->expr()->eq(
                     'pid',
-                    $queryBuilder->quote($pid, PDO::PARAM_INT)
+                    $queryBuilder->quote($pid)
                 ),
                 $queryBuilder->expr()->eq(
                     'sortdate',
-                    $queryBuilder->quote($sortdate, PDO::PARAM_INT)
+                    $queryBuilder->quote($sortdate)
                 )
             )
             ->executeQuery();
@@ -1193,7 +1193,7 @@ class IndexerRunner
         $table = 'tx_kesearch_filteroptions';
         $where = $queryBuilder->expr()->eq(
             'uid',
-            $queryBuilder->quote($tagUid, PDO::PARAM_INT)
+            $queryBuilder->quote($tagUid)
         );
 
         $row = $queryBuilder

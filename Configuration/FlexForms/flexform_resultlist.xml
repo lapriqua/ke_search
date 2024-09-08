@@ -3,16 +3,13 @@
 		<langDisable>1</langDisable>
 	</meta>
 	<sheets>
-		<MAIN>
+		<sDef>
 			<ROOT>
-				<TCEforms>
-					<sheetTitle>LLL:EXT:ke_search/Resources/Private/Language/locallang_resultlist.xlf:ff.main</sheetTitle>
-				</TCEforms>
+				<sheetTitle>LLL:EXT:ke_search/Resources/Private/Language/locallang_resultlist.xlf:ff.main</sheetTitle>
 				<type>array</type>
 				<el>
 
 					<loadFlexformsFromOtherCE>
-						<TCEforms>
 							<label>LLL:EXT:ke_search/Resources/Private/Language/locallang_resultlist.xlf:ff.loadFlexformsFromOtherCE</label>
 							<config>
 								<type>group</type>
@@ -27,11 +24,10 @@
 									</suggest>
 								</wizards>
 							</config>
-						</TCEforms>
 					</loadFlexformsFromOtherCE>
 
 				</el>
 			</ROOT>
-		</MAIN>
+		</sDef>
 	</sheets>
 </T3DataStructure>

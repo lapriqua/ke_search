@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tpwd\KeSearch\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use PDO;
 use TYPO3\CMS\Core\Database\Connection;
 
@@ -59,7 +60,7 @@ class PageRepository extends BaseRepository
                 . ' OR '
                 . $queryBuilder->expr()->eq('hidden', 1)
                 . ')',
-                $queryBuilder->expr()->gte('tstamp', $queryBuilder->createNamedParameter($tstamp, PDO::PARAM_INT))
+                $queryBuilder->expr()->gte('tstamp', $queryBuilder->createNamedParameter($tstamp, ParameterType::INTEGER))
             )
             ->executeQuery()
             ->fetchAllAssociative();

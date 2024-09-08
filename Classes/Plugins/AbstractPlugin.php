@@ -15,8 +15,14 @@ namespace Tpwd\KeSearch\Plugins;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -116,20 +122,22 @@ class AbstractPlugin
      */
     protected ?TypoScriptFrontendController $frontendController;
 
+
     /**
      * Class Constructor (true constructor)
      * Will also set $this->LLkey based on the "config.language" setting.
      *
-     * @param null $_ unused
      * @param ?TypoScriptFrontendController $frontendController
      *
      * PHPStan complains about the unused parameter $_
      * @phpstan-ignore-next-line
      */
-    public function __construct($_ = null, TypoScriptFrontendController $frontendController = null)
+    public function __construct(?TypoScriptFrontendController $frontendController = null)
     {
-        $this->frontendController = $frontendController ?: $GLOBALS['TSFE'];
-        $this->LLkey = $this->frontendController->getLanguage()->getTypo3Language();
+        $this->frontendController = $frontendController ?? $GLOBALS['TSFE'];
+
+        $this->initLlkey();
+
 
         $locales = GeneralUtility::makeInstance(Locales::class);
         if (GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 12) {
@@ -146,6 +154,12 @@ class AbstractPlugin
                 $this->altLLkey = implode(',', $alternativeLanguageKeys);
             }
         }
+    }
+
+
+    private function initLlkey(): void
+    {
+        $this->LLkey = $GLOBALS['TYPO3_REQUEST']->getAttribute('language')->getLocale()->getName();
     }
 
     /**

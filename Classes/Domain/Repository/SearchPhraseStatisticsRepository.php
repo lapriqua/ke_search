@@ -2,6 +2,7 @@
 
 namespace Tpwd\KeSearch\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use PDO;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -50,7 +51,7 @@ class SearchPhraseStatisticsRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()
@@ -72,7 +73,7 @@ class SearchPhraseStatisticsRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                 )
             );
         foreach ($updateFields as $key => $value) {

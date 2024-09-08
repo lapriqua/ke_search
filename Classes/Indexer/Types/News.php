@@ -20,6 +20,7 @@ namespace Tpwd\KeSearch\Indexer\Types;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\ParameterType;
 use Tpwd\KeSearch\Domain\Repository\CategoryRepository;
 use Tpwd\KeSearch\Domain\Repository\NewsRepository;
 use Tpwd\KeSearch\Domain\Repository\PageRepository;
@@ -60,7 +61,7 @@ class News extends IndexerBase
         // get the pages from where to index the news
         $indexPids = $this->getPidList(
             $this->indexerConfig['startingpoints_recursive'],
-            $this->indexerConfig['sysfolder'],
+            $this->indexerConfig['sysfolder'] ?? '',
             $table
         );
 
@@ -92,22 +93,22 @@ class News extends IndexerBase
             $where[] = $queryBuilder->expr()->or(
                 $queryBuilder->expr()->eq(
                     'archive',
-                    $queryBuilder->quote(0, \PDO::PARAM_INT)
+                    $queryBuilder->quote(0)
                 ),
                 $queryBuilder->expr()->gt(
                     'archive',
-                    $queryBuilder->quote(time(), \PDO::PARAM_INT)
+                    $queryBuilder->quote(time())
                 )
             );
         } elseif ($this->indexerConfig['index_news_archived'] == 2) {
             $where[] = $queryBuilder->expr()->and(
                 $queryBuilder->expr()->gt(
                     'archive',
-                    $queryBuilder->quote(0, \PDO::PARAM_INT)
+                    $queryBuilder->quote(0)
                 ),
                 $queryBuilder->expr()->lt(
                     'archive',
-                    $queryBuilder->quote(time(), \PDO::PARAM_INT)
+                    $queryBuilder->quote(time())
                 )
             );
         }
@@ -479,7 +480,7 @@ class News extends IndexerBase
                 ),
                 $queryBuilder->expr()->eq(
                     'news.uid',
-                    $queryBuilder->createNamedParameter($newsRecord['uid'], \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($newsRecord['uid'], ParameterType::INTEGER)
                 )
             )
             ->executeQuery();
@@ -523,7 +524,7 @@ class News extends IndexerBase
             ->where(
                 $queryBuilder->expr()->eq(
                     'tx_news_related_news',
-                    $queryBuilder->createNamedParameter($newsRecord['uid'], \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($newsRecord['uid'], ParameterType::INTEGER)
                 )
             )
             ->executeQuery();

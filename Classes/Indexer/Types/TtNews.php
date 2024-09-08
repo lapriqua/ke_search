@@ -2,6 +2,7 @@
 
 namespace Tpwd\KeSearch\Indexer\Types;
 
+use Doctrine\DBAL\ParameterType;
 use Tpwd\KeSearch\Domain\Repository\IndexRepository;
 use Tpwd\KeSearch\Domain\Repository\PageRepository;
 use Tpwd\KeSearch\Domain\Repository\TtNewsRepository;
@@ -292,7 +293,7 @@ class TtNews extends IndexerBase
         );
         $where[] = $queryBuilder->expr()->eq(
             'tt_news.uid',
-            $queryBuilder->createNamedParameter($newsRecord['uid'], \PDO::PARAM_INT)
+            $queryBuilder->createNamedParameter($newsRecord['uid'], ParameterType::INTEGER)
         );
 
         $catRes = $queryBuilder

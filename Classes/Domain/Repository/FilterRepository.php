@@ -2,6 +2,7 @@
 
 namespace Tpwd\KeSearch\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use Tpwd\KeSearch\Lib\SearchHelper;
 
 /***************************************************************
@@ -46,7 +47,7 @@ class FilterRepository extends BaseRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'l10n_parent',
-                    $queryBuilder->createNamedParameter($l10n_parent, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($l10n_parent, ParameterType::INTEGER)
                 )
             )
             ->executeQuery()
@@ -66,7 +67,7 @@ class FilterRepository extends BaseRepository
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)
                 )
             );
         foreach ($updateFields as $key => $value) {
